@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace Markov
 {
@@ -6,7 +7,12 @@ namespace Markov
     {
         static void Main(string[] args)
         {
-            SentenceGenerator markov = new SentenceGenerator("white-waterfall.txt");
+            Stopwatch timer = Stopwatch.StartNew();
+            SentenceGenerator markov = new SentenceGenerator("clickbait.txt");
+            timer.Stop();
+            Console.WriteLine($"Built Markov map in {timer.ElapsedMilliseconds / 1000.0} seconds.");
+            Console.WriteLine($"Token Count: {markov.TokenCount}");
+            Console.WriteLine($"Key Count  : {markov.KeyCount}");
 
             for (;;)
             {

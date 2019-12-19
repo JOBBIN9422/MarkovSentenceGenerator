@@ -19,7 +19,9 @@ namespace Markov
             }
         }
 
-        public SentenceGenerator(string filePath)
+        public int TokenCount { get; private set; }
+
+        public SentenceGenerator(string filePath, params string[] preprocessChars)
         {
             
             using (StreamReader reader = new StreamReader(filePath))
@@ -28,14 +30,23 @@ namespace Markov
                 string currSentence;
                 while ((currSentence = reader.ReadLine()) != null)
                 {
+                    if (string.IsNullOrEmpty(currSentence))
+                    {
+                        continue;
+                    }
+
                     //preprocess sentence
-                    currSentence = currSentence.Replace(".", "").Replace(",", "").Replace("?", "").Replace("!", "");
+                    foreach (string removeStr in preprocessChars)
+                    {
+                        currSentence = currSentence.Replace(removeStr, "");
+                    }
 
                     //add start and end marker-keywords
                     currSentence = $"*START* {currSentence} *END*";
 
                     //tokenize by spaces
                     string[] tokens = currSentence.Split(' ');
+                    TokenCount += tokens.Length;
 
                     //add any potential keys to the corpus
                     foreach (string token in tokens)
